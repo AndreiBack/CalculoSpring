@@ -4,7 +4,6 @@ import com.entrega088.TarefaMediaSpring.Entity.ValorEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
@@ -12,15 +11,18 @@ import java.util.List;
 @Service
 public class ValorService {
 
-    public ValorEntity CalculoValor(ValorEntity input) {
+    public ValorEntity calcularMedia(ValorEntity input) {
         List<BigDecimal> valores = input.getListaValores();
-
-        // Calcular a média
         BigDecimal soma = valores.stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal media = soma.divide(BigDecimal.valueOf(valores.size()), RoundingMode.HALF_UP);
+        input.setMedia(media);
+        input.setQuantidade(valores.size());
+        return input;
+    }
 
-        // Calcular a mediana
+    public ValorEntity calcularMediana(ValorEntity input) {
+        List<BigDecimal> valores = input.getListaValores();
         Collections.sort(valores);
         BigDecimal mediana;
         if (valores.size() % 2 == 0) {
@@ -29,19 +31,32 @@ public class ValorService {
         } else {
             mediana = valores.get(valores.size() / 2);
         }
+        input.setMediana(mediana);
+        input.setQuantidade(valores.size());
+        return input;
+    }
 
-        // Calcular o desvio padrão
+    public ValorEntity calcularDesvioPadrao(ValorEntity input) {
+        List<BigDecimal> valores = input.getListaValores();
+        BigDecimal media = calcularMedia(input).getMedia();
         BigDecimal somaDosQuadrados = valores.stream()
                 .map(valor -> valor.subtract(media).pow(2))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal desvio = BigDecimal.valueOf(Math.sqrt(somaDosQuadrados.divide(BigDecimal.valueOf(valores.size()), RoundingMode.HALF_UP).doubleValue()));
-
-        // Atualizar os valores na entidade de saída
-        input.setMedia(media);
-        input.setMediana(mediana);
         input.setDesvio(desvio);
         input.setQuantidade(valores.size());
+        return input;
+    }
 
+    public ValorEntity calcularValor(ValorEntity input) {
+        List<BigDecimal> valores = input.getListaValores();
+        calcularMedia(input);
+        calcularMediana(input);
+        calcularDesvioPadrao(input);
+        input.setQuantidade(valores.size());
+        if (valores == null || valores.isEmpty()) {
+            throw new IllegalArgumentException("Valor inserido de forma incorreta");
+        }
         return input;
     }
 }
