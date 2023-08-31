@@ -70,4 +70,36 @@ public class ValorServiceTest {
         assertEquals(valores.size(), result.getQuantidade());
 
     }
+    @Test
+    public void testCalcularValorMinimo() {
+        List<BigDecimal> valores = Arrays.asList(BigDecimal.valueOf(10), BigDecimal.valueOf(20), BigDecimal.valueOf(5));
+        ValorEntity input = new ValorEntity();
+        input.setListaValores(valores);
+
+        ValorEntity result = valorService.calcularValorMinimo(input);
+
+        assertEquals(BigDecimal.valueOf(5), result.getValorMinimo());
+    }
+
+    @Test
+    public void testCalcularValorMaximo() {
+        List<BigDecimal> valores = Arrays.asList(BigDecimal.valueOf(10), BigDecimal.valueOf(20), BigDecimal.valueOf(5));
+        ValorEntity input = new ValorEntity();
+        input.setListaValores(valores);
+
+        ValorEntity result = valorService.calcularValorMaximo(input);
+
+        assertEquals(BigDecimal.valueOf(20), result.getValorMaximo());
+    }
+
+    @Test
+    public void testCalcularSomaValores() {
+        List<BigDecimal> valores = Arrays.asList(BigDecimal.valueOf(10), BigDecimal.valueOf(20), BigDecimal.valueOf(5));
+        ValorEntity input = new ValorEntity();
+        input.setListaValores(valores);
+
+        ValorEntity result = valorService.calcularSomaValores(input);
+
+        assertEquals(BigDecimal.valueOf(35), result.getSomaValores());
+    }
 }
