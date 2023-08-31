@@ -7,15 +7,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+@Getter @Setter
 public class ValorEntity {
-    @Getter @Setter
     private List<BigDecimal> listaValores;
-    @Getter @Setter
     private BigDecimal media;
-    @Getter @Setter
     private BigDecimal mediana;
-    @Getter @Setter
     private BigDecimal desvio;
-    @Getter @Setter
     private int quantidade;
+    private BigDecimal valorMinimo;
+    private BigDecimal valorMaximo;
+    private BigDecimal somaValores;
 }
